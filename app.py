@@ -10,7 +10,10 @@ Swagger(app)
 
 # Configura CORS solo para el dominio de tu frontend en producción
 FRONTEND_ORIGIN = os.environ.get('FRONTEND_ORIGIN', '*')
-CORS(app, origins=["http://localhost:4200", FRONTEND_ORIGIN])
+CORS(app, origins=["http://localhost:4200", 
+                  "https://ss-defensiveapp.vercel.app", 
+                  FRONTEND_ORIGIN
+                ])
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
