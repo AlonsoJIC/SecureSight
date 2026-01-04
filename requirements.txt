@@ -3,3 +3,4 @@ requests
 flasgger
 flask-cors
 validators
+gunicorn

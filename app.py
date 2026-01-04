@@ -3,10 +3,14 @@ from flasgger import Swagger
 from flask_cors import CORS
 import validators
 from modules import security_headers, cookies, https_cert, info_exposed, scoring
+import os
 
 app = Flask(__name__)
 Swagger(app)
-CORS(app)
+
+# Configura CORS solo para el dominio de tu frontend en producción
+FRONTEND_ORIGIN = os.environ.get('FRONTEND_ORIGIN', '*')
+CORS(app, origins=[FRONTEND_ORIGIN])
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
@@ -56,4 +60,5 @@ def analyze():
         return jsonify({'error': f'No se pudo analizar la URL: {str(e)}'}), 500
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
