@@ -1,10 +1,31 @@
 from flask import Flask, request, jsonify
+from flasgger import Swagger
 from modules import security_headers, cookies, https_cert, info_exposed, scoring
 
 app = Flask(__name__)
+Swagger(app)
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
+    """
+    Analiza la seguridad de una URL
+    ---
+    parameters:
+      - name: url
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            url:
+              type: string
+              example: "https://ejemplo.com"
+    responses:
+      200:
+        description: Reporte de seguridad
+        schema:
+          type: object
+    """
     data = request.get_json()
     url = data.get('url')
     if not url:
