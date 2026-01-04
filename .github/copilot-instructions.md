@@ -1,0 +1,5 @@
+- [x] Proyecto convertido a CLI
+- [x] Flask y templates eliminados
+- [x] main.py creado para uso por terminal
+- [x] README actualizado
+- [ ] Probar ejecución y corregir errores si aparecen
