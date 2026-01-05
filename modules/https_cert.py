@@ -10,15 +10,15 @@ def analyze(url):
     results = []
     try:
         if parsed.scheme != 'https':
-            results.append({'name': 'HTTPS', 'status': '❌ No activo', 'impact': 'El sitio no usa HTTPS'})
+            results.append({'name': 'HTTPS', 'status': '❌ Inactive', 'impact': 'The site does not use HTTPS'})
             return results
         context = ssl.create_default_context()
         with socket.create_connection((host, port), timeout=10) as sock:
             with context.wrap_socket(sock, server_hostname=host) as ssock:
                 cert = ssock.getpeercert()
-                results.append({'name': 'HTTPS', 'status': '✔ Activo', 'impact': 'El sitio usa HTTPS'})
-                results.append({'name': 'Certificado', 'status': cert.get('subject', ''), 'impact': ''})
-                results.append({'name': 'Expiración', 'status': cert.get('notAfter', ''), 'impact': ''})
+                results.append({'name': 'HTTPS', 'status': '✔ Active', 'impact': 'The site uses HTTPS'})
+                results.append({'name': 'Certificate', 'status': cert.get('subject', ''), 'impact': ''})
+                results.append({'name': 'Expiration', 'status': cert.get('notAfter', ''), 'impact': ''})
     except Exception as e:
-        results.append({'name': 'HTTPS/Certificado', 'status': 'Error', 'impact': str(e)})
+        results.append({'name': 'HTTPS/Certificate', 'status': 'Error', 'impact': str(e)})
     return results

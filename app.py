@@ -8,17 +8,20 @@ import os
 app = Flask(__name__)
 Swagger(app)
 
-# Configura CORS solo para el dominio de tu frontend en producción
+
+# Configure CORS only for your frontend domain in production
 FRONTEND_ORIGIN = os.environ.get('FRONTEND_ORIGIN', '*')
-CORS(app, origins=["http://localhost:4200", 
-                  "https://ss-defensiveapp.vercel.app", 
-                  FRONTEND_ORIGIN
-                ])
+CORS(app, origins=[
+    "http://localhost:4200",
+    "https://ss-defensiveapp.vercel.app",
+    FRONTEND_ORIGIN
+])
+
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
     """
-    Analiza la seguridad de una URL
+    Analyze the security configuration of a website URL
     ---
     parameters:
       - name: url
@@ -29,22 +32,26 @@ def analyze():
           properties:
             url:
               type: string
-              example: "https://ejemplo.com"
+              example: "https://example.com"
     responses:
       200:
-        description: Reporte de seguridad
+        description: Security analysis report
         schema:
           type: object
       400:
-        description: Error en la petición
+        description: Invalid or missing URL
+        schema:
+          type: object
+      500:
+        description: Internal server error
         schema:
           type: object
     """
     data = request.get_json()
     url = data.get('url')
-    # Validación avanzada de URL
+    # Advanced URL validation
     if not url or not validators.url(url):
-        return jsonify({'error': 'URL inválida o ausente'}), 400
+        return jsonify({'error': 'Invalid or missing URL'}), 400
     try:
         headers_result = security_headers.analyze(url)
         cookies_result = cookies.analyze(url)
@@ -60,8 +67,8 @@ def analyze():
         }
         return jsonify(report)
     except Exception as e:
-        return jsonify({'error': f'No se pudo analizar la URL: {str(e)}'}), 500
+        return jsonify({'error': f'Could not analyze the URL: {str(e)}'}), 500
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=False)
+  port = int(os.environ.get('PORT', 5000))
+  app.run(host='0.0.0.0', port=port, debug=False)

@@ -6,17 +6,17 @@ def analyze(url):
         headers = resp.headers
         text = resp.text
     except Exception as e:
-        return [{'name': 'Error', 'status': 'No se pudo obtener información', 'impact': str(e)}]
+        return [{'name': 'Error', 'status': 'Could not retrieve information', 'impact': str(e)}]
     results = []
     # Server header
     server = headers.get('Server')
     if server:
-        results.append({'name': 'Server', 'status': server, 'impact': 'Expone tecnología del servidor'})
+        results.append({'name': 'Server', 'status': server, 'impact': 'Server technology exposed'})
     # X-Powered-By
     powered = headers.get('X-Powered-By')
     if powered:
-        results.append({'name': 'X-Powered-By', 'status': powered, 'impact': 'Expone tecnología backend'})
-    # Tecnologías detectables
+        results.append({'name': 'X-Powered-By', 'status': powered, 'impact': 'Backend technology exposed'})
+    # Detectable technologies
     techs = []
     if 'wp-content' in text:
         techs.append('WordPress')
@@ -25,8 +25,8 @@ def analyze(url):
     if 'Joomla!' in text:
         techs.append('Joomla')
     if techs:
-        results.append({'name': 'Tecnologías detectadas', 'status': ', '.join(techs), 'impact': 'Superficie de ataque identificable'})
-    # Errores verbosos
+        results.append({'name': 'Detected technologies', 'status': ', '.join(techs), 'impact': 'Identifiable attack surface'})
+    # Verbose errors
     if 'Exception' in text or 'Traceback' in text or 'Fatal error' in text:
-        results.append({'name': 'Errores verbosos', 'status': 'Detectados', 'impact': 'Puede revelar información sensible'})
+        results.append({'name': 'Verbose errors', 'status': 'Detected', 'impact': 'May reveal sensitive information'})
     return results

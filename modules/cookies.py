@@ -7,7 +7,7 @@ def analyze(url):
         cookies = resp.cookies
         set_cookie = resp.headers.get('Set-Cookie', '')
     except Exception as e:
-        return [{'name': 'Error', 'status': 'No se pudo obtener cookies', 'impact': str(e)}]
+        return [{'name': 'Error', 'status': 'Could not retrieve cookies', 'impact': str(e)}]
     results = []
     if set_cookie:
         cookie = SimpleCookie()
@@ -17,15 +17,15 @@ def analyze(url):
             flags = []
             impact = []
             if not morsel['secure']:
-                flags.append('No Secure')
-                impact.append('Puede ser enviada por HTTP')
+                flags.append('Not Secure')
+                impact.append('May be sent over HTTP')
             if not morsel['httponly']:
-                flags.append('No HttpOnly')
-                impact.append('Accesible desde JS → riesgo de robo de sesión')
+                flags.append('Not HttpOnly')
+                impact.append('Accessible from JS → session theft risk')
             if not morsel['samesite']:
                 flags.append('No SameSite')
-                impact.append('Riesgo de CSRF')
-            results.append({'name': key, 'status': ', '.join(flags) if flags else '✔ Segura', 'impact': '; '.join(impact) if impact else 'Sin riesgos evidentes'})
+                impact.append('CSRF risk')
+            results.append({'name': key, 'status': ', '.join(flags) if flags else '✔ Secure', 'impact': '; '.join(impact) if impact else 'No evident risks'})
     else:
-        results.append({'name': 'Cookies', 'status': 'No se detectaron cookies', 'impact': ''})
+        results.append({'name': 'Cookies', 'status': 'No cookies detected', 'impact': ''})
     return results
